@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Слоты — Центральный университет</title>
+<style>
+  @font-face{font-family:'GraphikWeb';src:url('saveweb2zip-com-cu-ru/fonts/GraphikLCG-Regular.woff') format('woff');font-weight:400;font-display:swap}
+  @font-face{font-family:'GraphikWeb';src:url('saveweb2zip-com-cu-ru/fonts/GraphikLCG-Medium.woff') format('woff');font-weight:500;font-display:swap}
+  @font-face{font-family:'GraphikWeb';src:url('saveweb2zip-com-cu-ru/fonts/GraphikLCG-Semibold.woff') format('woff');font-weight:600;font-display:swap}
+  @font-face{font-family:'HalvarBreitt2';src:url('saveweb2zip-com-cu-ru/fonts/HalvarBreitt2-XBd.woff') format('woff');font-weight:800;font-display:swap}
+  :root{
+    --cu-bg:#e7e6e6;
+    --cu-surface:#ffffff;
+    --cu-text:#141414;
+    --cu-text-secondary:#6b6b6b;
+    --cu-accent:#1a1a2e;
+    --cu-accent-light:#2d2d4a;
+    --cu-green:#06753d;
+    --cu-green-light:#e8f5ee;
+    --cu-border:#d4d4d4;
+    --cu-shadow:0 2px 12px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--cu-bg);
+    font-family:'GraphikWeb',Arial,sans-serif;
+    color:var(--cu-text);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .game{width:700px;max-width:100%;padding:20px}
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--cu-surface);
+    border-radius:12px;
+    padding:12px 20px;
+    margin-bottom:12px;
+    box-shadow:var(--cu-shadow);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-logo{
+    width:40px;height:40px;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .brand-logo img{
+    width:100%;height:100%;
+    object-fit:contain;
+    display:block;
+    transform:rotate(45deg);
+  }
+  .brand-text{
+    font-family:'HalvarBreitt2',sans-serif;
+    font-weight:800;
+    font-size:13px;
+    letter-spacing:.3px;
+    color:var(--cu-text);
+  }
+  .stats{display:flex;gap:8px}
+  .stat{
+    background:var(--cu-bg);
+    border-radius:8px;
+    padding:6px 14px;
+    text-align:center;
+    min-width:70px;
+  }
+  .stat .label{
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    color:var(--cu-text-secondary);
+    font-weight:500;
+  }
+  .stat .value{
+    font-size:16px;
+    font-weight:600;
+    color:var(--cu-text);
+    margin-top:1px;
+  }
+  .stat.win .value{color:var(--cu-green)}
+
+  .board{
+    background:var(--cu-surface);
+    border-radius:12px;
+    padding:12px;
+    box-shadow:var(--cu-shadow);
+  }
+  .reels{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .reel{
+    background:var(--cu-bg);
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    height:420px;
+    position:relative;
+  }
+  .reel-track{
+    display:flex;
+    flex-direction:column;
+    transition:transform .08s linear;
+  }
+  .cell{
+    height:84px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .cell svg{
+    width:52px;
+    height:52px;
+  }
+  .cell img{
+    width:52px;
+    height:52px;
+    object-fit:contain;
+    display:block;
+  }
+  .reel.spinning .reel-track{transition:none}
+  .reel.win .cell.winning{
+    animation:pulse .6s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{transform:scale(1);opacity:1}
+    50%{transform:scale(1.15);opacity:.8}
+  }
+
+  .controls{
+    margin-top:12px;
+    background:var(--cu-surface);
+    border-radius:12px;
+    padding:12px 16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    box-shadow:var(--cu-shadow);
+  }
+  .bet-group{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:var(--cu-bg);
+    border-radius:8px;
+    padding:6px 12px;
+  }
+  .bet-label{
+    font-size:10px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:var(--cu-text-secondary);
+  }
+  .bet-value{
+    font-size:18px;
+    font-weight:600;
+    color:var(--cu-accent);
+    min-width:30px;
+    text-align:center;
+  }
+  button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+    outline:none;
+    background:none;
+  }
+  .chip{
+    background:var(--cu-surface);
+    border:1px solid var(--cu-border);
+    color:var(--cu-text);
+    font-weight:500;
+    font-size:12px;
+    border-radius:6px;
+    padding:6px 10px;
+    transition:.15s;
+  }
+  .chip:hover{border-color:var(--cu-accent);color:var(--cu-accent)}
+  .chip:active{transform:scale(.95)}
+  .chip.active{
+    background:var(--cu-accent);
+    color:#fff;
+    border-color:var(--cu-accent);
+  }
+  .spin-btn{
+    background:var(--cu-accent);
+    color:#fff;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:.5px;
+    border-radius:8px;
+    padding:12px 32px;
+    transition:.1s;
+    box-shadow:0 2px 0 #000, 0 4px 10px rgba(26,26,46,.25);
+  }
+  .spin-btn:active{transform:translateY(2px);box-shadow:0 0 0 #000}
+  .spin-btn:disabled{opacity:.5;cursor:not-allowed}
+  .turbo-btn,.auto-btn{
+    background:var(--cu-bg);
+    color:var(--cu-text);
+    font-weight:500;
+    font-size:13px;
+    border-radius:8px;
+    padding:12px 18px;
+    transition:.15s;
+  }
+  .turbo-btn.active,.auto-btn.active{
+    background:var(--cu-green);
+    color:#fff;
+  }
+  .auto-options{display:flex;gap:4px}
+  .spacer{flex:1}
+  .msg{
+    text-align:center;
+    color:var(--cu-text-secondary);
+    font-weight:500;
+    height:20px;
+    margin-top:6px;
+    font-size:13px;
+  }
+</style>
+</head>
+<body>
+<div class="game">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="logo.png" alt="ЦУ">
+      </div>
+      <div class="brand-text">Центральный университет</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="label">Грант</div><div class="value" id="grantVal">100%</div></div>
+      <div class="stat win"><div class="label">Выигрыш</div><div class="value" id="winVal">0</div></div>
+      <div class="stat"><div class="label">Общий</div><div class="value" id="totalVal">0</div></div>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="reels" id="reels"></div>
+  </div>
+
+  <div class="msg" id="msg">&nbsp;</div>
+
+  <div class="controls">
+    <div class="bet-group">
+      <span class="bet-label">Ставка</span>
+      <button class="chip" id="betMinus100">−100</button>
+      <button class="chip" id="betMinus10">−10</button>
+      <button class="chip" id="betMinus1">−1</button>
+      <span class="bet-value" id="betVal">10</span>
+      <button class="chip" id="betMax">MAX</button>
+      <button class="chip" id="betPlus1">+1</button>
+      <button class="chip" id="betPlus10">+10</button>
+      <button class="chip" id="betPlus100">+100</button>
+    </div>
+
+    <button class="spin-btn" id="spinBtn">SPIN</button>
+    <button class="turbo-btn" id="turboBtn">TURBO</button>
+    <button class="auto-btn" id="autoBtn">AUTO</button>
+
+    <div class="auto-options">
+      <button class="chip auto-count" data-n="10">10</button>
+      <button class="chip auto-count" data-n="25">25</button>
+      <button class="chip auto-count" data-n="50">50</button>
+      <button class="chip auto-count" data-n="100">100</button>
+      <button class="chip auto-count" data-n="0">∞</button>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const SYMS = {
+    rocket:  {weight:12, val:10, svg:`<img src="rocket.svg" alt="rocket">`},
+    clock:   {weight:14, val:8,  svg:`<img src="clock.svg" alt="clock">`},
+    case:    {weight:14, val:6,  svg:`<img src="case.svg" alt="case">`},
+    people:  {weight:18, val:4,  svg:`<img src="111.svg" alt="people">`},
+    home:    {weight:18, val:3,  svg:`<img src="Icons_basic.svg" alt="home">`},
+    skull:   {weight:6,  val:25, svg:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="42" rx="34" ry="30" fill="#f2f2f2"/><rect x="30" y="60" width="40" height="18" fill="#f2f2f2"/><circle cx="36" cy="42" r="9" fill="#333"/><circle cx="64" cy="42" r="9" fill="#333"/><polygon points="50,50 45,62 55,62" fill="#333"/><rect x="34" y="66" width="6" height="8" fill="#333"/><rect x="46" y="66" width="6" height="8" fill="#333"/><rect x="58" y="66" width="6" height="8" fill="#333"/></svg>`},
+    eye:     {weight:5,  val:0,  scatter:true, svg:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="46" ry="30" fill="#111"/><ellipse cx="50" cy="50" rx="40" ry="24" fill="#f5941f"/><circle cx="50" cy="50" r="16" fill="#111"/></svg>`}
+  };
+  const SYM_KEYS = Object.keys(SYMS);
+  const WEIGHT_TABLE = [];
+  SYM_KEYS.forEach(k=>{ for(let i=0;i<SYMS[k].weight;i++) WEIGHT_TABLE.push(k); });
+
+  function randomSymbol(){
+    return WEIGHT_TABLE[Math.floor(Math.random()*WEIGHT_TABLE.length)];
+  }
+
+  const REELS = 3, ROWS = 5;
+  const CELL_H = 84;
+  let grant = 10000;
+  let totalWin = 0;
+  let bet = 10;
+  let spinning = false;
+  let turbo = false;
+  let autoSpinsLeft = 0;
+  let autoActive = false;
+
+  const grantVal = document.getElementById('grantVal');
+  const winVal = document.getElementById('winVal');
+  const totalVal = document.getElementById('totalVal');
+  const betVal = document.getElementById('betVal');
+  const msg = document.getElementById('msg');
+  const reelsEl = document.getElementById('reels');
+  const spinBtn = document.getElementById('spinBtn');
+  const turboBtn = document.getElementById('turboBtn');
+  const autoBtn = document.getElementById('autoBtn');
+
+  function fmt(n){ return n.toLocaleString('ru-RU'); }
+  function updateStats(){
+    grantVal.textContent = fmt(grant);
+    totalVal.textContent = fmt(totalWin);
+  }
+
+  const tracks = [];
+  const grids = [];
+
+  function buildReels(){
+    reelsEl.innerHTML = '';
+    for(let r=0; r<REELS; r++){
+      const reel = document.createElement('div');
+      reel.className = 'reel';
+      const track = document.createElement('div');
+      track.className = 'reel-track';
+      reel.appendChild(track);
+      reelsEl.appendChild(reel);
+      tracks.push(track);
+      grids.push([]);
+      const initial = [];
+      for(let row=0; row<ROWS; row++){
+        initial.push(randomSymbol());
+      }
+      grids[r] = initial;
+      renderTrackStatic(r, initial);
+    }
+  }
+
+  function cellHTML(key){
+    return `<div class="cell" data-sym="${key}">${SYMS[key].svg}</div>`;
+  }
+
+  function renderTrackStatic(r, keys){
+    tracks[r].style.transform = 'translateY(0px)';
+    tracks[r].innerHTML = keys.map(cellHTML).join('');
+  }
+
+  buildReels();
+
+  function spinReel(r, finalKeys, duration, delay){
+    return new Promise(resolve=>{
+      const track = tracks[r];
+      const reelEl = reelsEl.children[r];
+      reelEl.classList.remove('win');
+      const spinCount = Math.max(14, Math.floor(duration/55));
+      const stripKeys = [];
+      for(let i=0;i<spinCount;i++) stripKeys.push(randomSymbol());
+      const fullStrip = stripKeys.concat(finalKeys);
+      track.style.transition = 'none';
+      track.style.transform = 'translateY(0px)';
+      track.innerHTML = fullStrip.map(cellHTML).join('');
+
+      const totalDistance = (fullStrip.length - ROWS) * CELL_H;
+
+      setTimeout(()=>{
+        reelEl.classList.add('spinning');
+        void track.offsetHeight;
+        track.style.transition = `transform ${duration}ms cubic-bezier(.15,.85,.35,1)`;
+        track.style.transform = `translateY(-${totalDistance}px)`;
+
+        setTimeout(()=>{
+          reelEl.classList.remove('spinning');
+          track.style.transition = 'none';
+          track.innerHTML = finalKeys.map(cellHTML).join('');
+          track.style.transform = 'translateY(0px)';
+          grids[r] = finalKeys;
+          resolve();
+        }, duration + 30);
+      }, delay);
+    });
+  }
+
+  function generateFinalGrid(){
+    const grid = [];
+    for(let r=0;r<REELS;r++){
+      const col = [];
+      for(let row=0; row<ROWS; row++) col.push(randomSymbol());
+      grid.push(col);
+    }
+    return grid;
+  }
+
+  function evaluateWins(grid){
+    let winAmount = 0;
+    const winningCells = [];
+    for(let row=0; row<ROWS; row++){
+      const first = grid[0][row];
+      if(SYMS[first].scatter) continue;
+      let count = 1;
+      for(let r=1;r<REELS;r++){
+        if(grid[r][row] === first) count++;
+        else break;
+      }
+      if(count >= 3){
+        const val = SYMS[first].val * count * (bet/10);
+        winAmount += val;
+        for(let r=0;r<count;r++) winningCells.push({reel:r,row});
+      }
+    }
+    let scatterCount = 0;
+    const scatterCells = [];
+    for(let r=0;r<REELS;r++){
+      for(let row=0; row<ROWS; row++){
+        if(SYMS[grid[r][row]].scatter){
+          scatterCount++;
+          scatterCells.push({reel:r,row});
+        }
+      }
+    }
+    if(scatterCount >= 3){
+      winAmount += 20 * (bet/10);
+      scatterCells.forEach(c=>winningCells.push(c));
+    }
+    return {winAmount: Math.round(winAmount), winningCells, scatterCount};
+  }
+
+  function highlightWins(cells){
+    cells.forEach(({reel,row})=>{
+      const reelEl = reelsEl.children[reel];
+      reelEl.classList.add('win');
+      const cellEl = reelEl.querySelectorAll('.cell')[row];
+      if(cellEl) cellEl.classList.add('winning');
+    });
+  }
+
+  function clearHighlights(){
+    for(let r=0;r<REELS;r++){
+      reelsEl.children[r].classList.remove('win');
+      reelsEl.children[r].querySelectorAll('.cell').forEach(c=>c.classList.remove('winning'));
+    }
+  }
+
+  async function doSpin(){
+    if(spinning) return;
+    if(grant < bet){
+      msg.textContent = 'Грант закончился';
+      stopAuto();
+      return;
+    }
+    spinning = true;
+    spinBtn.disabled = true;
+    clearHighlights();
+    msg.textContent = '';
+    winVal.textContent = '0';
+    grant -= bet;
+    updateStats();
+
+    const grid = generateFinalGrid();
+    const baseDuration = turbo ? 260 : 650;
+    const staggerStep = turbo ? 40 : 120;
+
+    const promises = [];
+    for(let r=0;r<REELS;r++){
+      const finalKeys = [];
+      for(let row=0; row<ROWS; row++) finalKeys.push(grid[r][row]);
+      promises.push(spinReel(r, finalKeys, baseDuration + r*20, r*staggerStep));
+    }
+    await Promise.all(promises);
+
+    const {winAmount, winningCells, scatterCount} = evaluateWins(grid);
+    if(winAmount > 0){
+      grant += winAmount;
+      totalWin += winAmount;
+      winVal.textContent = fmt(winAmount);
+      highlightWins(winningCells);
+      msg.textContent = scatterCount >= 3 ? `Бонус! Выпало ${scatterCount} символа-глаза — выигрыш ${fmt(winAmount)}` : `Выигрыш: ${fmt(winAmount)}`;
+    } else {
+      msg.textContent = 'Повезёт в следующий раз!';
+    }
+    updateStats();
+    spinning = false;
+    spinBtn.disabled = false;
+
+    if(autoActive){
+      if(autoSpinsLeft > 0){
+        autoSpinsLeft--;
+        if(autoSpinsLeft === 0){ stopAuto(); }
+      }
+      if(autoActive){
+        if(grant >= bet){
+          setTimeout(doSpin, turbo ? 180 : 450);
+        } else {
+          stopAuto();
+          msg.textContent = 'Грант закончился';
+        }
+      }
+    }
+  }
+
+  function stopAuto(){
+    autoActive = false;
+    autoSpinsLeft = 0;
+    autoBtn.classList.remove('active');
+    document.querySelectorAll('.auto-count').forEach(b=>b.classList.remove('active'));
+  }
+
+  const betSteps = [
+    ['betMinus100', -100], ['betMinus10', -10], ['betMinus1', -1],
+    ['betPlus1', 1], ['betPlus10', 10], ['betPlus100', 100]
+  ];
+  betSteps.forEach(([id, delta])=>{
+    document.getElementById(id).addEventListener('click', ()=>{
+      if(spinning) return;
+      bet = Math.max(1, bet + delta);
+      betVal.textContent = bet;
+    });
+  });
+  document.getElementById('betMax').addEventListener('click', ()=>{
+    if(spinning) return;
+    bet = Math.max(1, 1000);
+    betVal.textContent = bet;
+  });
+
+  spinBtn.addEventListener('click', ()=>{
+    if(!spinning) doSpin();
+  });
+
+  turboBtn.addEventListener('click', ()=>{
+    turbo = !turbo;
+    turboBtn.classList.toggle('active', turbo);
+  });
+
+  autoBtn.addEventListener('click', ()=>{
+    if(autoActive){
+      stopAuto();
+      return;
+    }
+    autoActive = true;
+    autoSpinsLeft = 0;
+    autoBtn.classList.add('active');
+    if(!spinning) doSpin();
+  });
+
+  document.querySelectorAll('.auto-count').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const n = parseInt(btn.dataset.n, 10);
+      document.querySelectorAll('.auto-count').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      autoActive = true;
+      autoSpinsLeft = n;
+      autoBtn.classList.add('active');
+      if(!spinning) doSpin();
+    });
+  });
+
+  updateStats();
+})();
+</script>
+</body>
+</html>
