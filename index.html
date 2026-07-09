@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Слоты — Центральный университет</title>
 <style>
   @font-face{font-family:'GraphikWeb';src:url('saveweb2zip-com-cu-ru/fonts/GraphikLCG-Regular.woff') format('woff');font-weight:400;font-display:swap}
@@ -35,7 +35,7 @@
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
   }
-  .game{width:700px;max-width:100%;padding:20px;margin:0 auto}
+  .game{width:700px;max-width:100%;padding:20px;margin:0 auto;max-height:100vh;overflow-y:auto}
 
   .topbar{
     display:flex;
@@ -240,66 +240,82 @@
 
   @media(max-width:600px){
     :root{
-      --cell-h:60px;
-      --sym-size:36px;
-      --reel-h:300px;
+      --cell-h:36px;
+      --sym-size:24px;
+      --reel-h:180px;
     }
-    .game{padding:10px}
-    .topbar{padding:10px 14px;flex-wrap:wrap;gap:8px}
-    .brand-text{font-size:11px}
-    .stats{gap:4px;flex:1;justify-content:flex-end}
-    .stat{min-width:auto;padding:4px 10px}
-    .stat .label{font-size:7px}
-    .stat .value{font-size:13px}
-    .board{padding:8px}
-    .reels{gap:4px}
-    .reel{border-radius:8px}
-    .controls{padding:10px;gap:6px;flex-direction:column}
-    .bet-group{padding:4px 8px;gap:4px;flex-wrap:wrap;width:100%;justify-content:center}
-    .bet-label{font-size:9px}
-    .bet-value{font-size:15px;min-width:24px}
-    .chip{font-size:11px;padding:5px 8px}
-    .spin-btn{width:100%;padding:12px 16px;font-size:14px}
-    .turbo-btn,.auto-btn{padding:10px 12px;font-size:11px;flex:1}
-    .auto-options{gap:3px;flex-wrap:wrap;justify-content:center;width:100%}
-    .auto-options .chip{padding:4px 8px;font-size:10px}
-    .msg{font-size:11px;height:18px}
+    html,body{
+      display:block;
+      height:100vh;
+      overflow:hidden;
+      margin:0;
+      padding:0;
+    }
+    .game{padding:8px;max-width:100%;width:100%;margin:0 auto;box-sizing:border-box;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+    .topbar{padding:6px 10px;flex-wrap:wrap;gap:4px;margin-bottom:6px;flex-shrink:0}
+    .brand-text{font-size:9px}
+    .brand-logo{width:28px;height:28px}
+    .stats{gap:3px;flex:1;justify-content:flex-end}
+    .stat{min-width:auto;padding:3px 6px}
+    .stat .label{font-size:6px}
+    .stat .value{font-size:11px}
+    .board{padding:6px;margin-bottom:6px;flex-shrink:0}
+    .reels{gap:3px}
+    .reel{border-radius:5px}
+    .controls{padding:6px;gap:4px;flex-direction:column;flex-shrink:0}
+    .bet-group{padding:3px 6px;gap:3px;flex-wrap:wrap;width:100%;justify-content:center}
+    .bet-label{font-size:7px}
+    .bet-value{font-size:13px;min-width:18px}
+    .chip{font-size:9px;padding:3px 5px}
+    .spin-btn{width:100%;padding:8px 12px;font-size:11px}
+    .turbo-btn,.auto-btn{padding:6px 8px;font-size:9px;flex:1}
+    .auto-options{gap:2px;flex-wrap:wrap;justify-content:center;width:100%}
+    .auto-options .chip{padding:2px 5px;font-size:8px}
+    .msg{font-size:9px;height:14px;margin-top:3px;flex-shrink:0}
   }
 
   @media(max-width:380px){
     :root{
-      --cell-h:52px;
-      --sym-size:30px;
-      --reel-h:260px;
+      --cell-h:32px;
+      --sym-size:20px;
+      --reel-h:160px;
     }
-    .stat .value{font-size:11px}
-    .chip{font-size:10px;padding:4px 6px}
-    .spin-btn{font-size:12px;padding:10px 12px}
-    .turbo-btn,.auto-btn{font-size:10px;padding:8px 10px}
-    .bet-group{gap:3px;padding:3px 6px}
-    .bet-label{font-size:8px}
-    .bet-value{font-size:13px}
+    .game{padding:6px}
+    .topbar{padding:5px 8px;gap:3px;margin-bottom:5px}
+    .board{padding:5px;margin-bottom:5px}
+    .stat .value{font-size:10px}
+    .chip{font-size:8px;padding:2px 4px}
+    .spin-btn{font-size:10px;padding:7px 10px}
+    .turbo-btn,.auto-btn{font-size:8px;padding:5px 7px}
+    .bet-group{gap:2px;padding:2px 4px}
+    .bet-label{font-size:6px}
+    .bet-value{font-size:11px}
+    .controls{gap:3px;padding:5px}
+    .brand-text{font-size:8px}
+    .brand-logo{width:24px;height:24px}
+    .msg{font-size:8px;height:12px;margin-top:2px}
   }
 
   @media(max-height:700px) and (orientation:landscape){
     :root{
-      --cell-h:48px;
-      --sym-size:28px;
-      --reel-h:240px;
+      --cell-h:44px;
+      --sym-size:26px;
+      --reel-h:220px;
     }
-    .game{padding:6px}
-    .topbar{padding:6px 10px;margin-bottom:6px}
-    .board{padding:6px}
-    .reels{gap:3px}
-    .controls{padding:6px 10px;margin-top:6px;flex-direction:row;flex-wrap:wrap}
-    .bet-group{padding:3px 6px;flex:1}
-    .spin-btn{padding:8px 16px;flex:1}
-    .turbo-btn,.auto-btn{padding:6px 10px;font-size:10px}
+    .game{padding:4px;max-height:100vh;overflow-y:auto}
+    .topbar{padding:4px 8px;margin-bottom:4px}
+    .board{padding:4px;margin-bottom:4px}
+    .reels{gap:2px}
+    .controls{padding:4px 8px;margin-top:4px;flex-direction:row;flex-wrap:wrap;gap:4px}
+    .bet-group{padding:2px 4px;flex:1;min-width:200px}
+    .spin-btn{padding:6px 12px;flex:1;min-width:80px}
+    .turbo-btn,.auto-btn{padding:5px 8px;font-size:9px;min-width:50px}
     .auto-options{display:none}
-    .brand-logo{width:28px;height:28px}
-    .brand-text{font-size:10px}
-    .stat{padding:3px 8px}
-    .stat .value{font-size:11px}
+    .brand-logo{width:24px;height:24px}
+    .brand-text{font-size:9px}
+    .stat{padding:2px 6px}
+    .stat .value{font-size:10px}
+    .msg{display:none}
   }
 </style>
 </head>
